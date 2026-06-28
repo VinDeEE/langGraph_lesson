@@ -1,13 +1,12 @@
 package com.example.assistant;
 
+import com.example.common.AppConfig;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.CompiledGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
 import java.util.*;
 
@@ -40,13 +39,13 @@ public class TaskAssistantDemo {
     private static final Logger log = LoggerFactory.getLogger(TaskAssistantDemo.class);
 
     public static void main(String[] args) throws Exception {
-        Properties config = loadConfig();
-        String apiKey = config.getProperty("openai.api.key");
-        String baseUrl = config.getProperty("openai.api.base-url");
-        String modelName = config.getProperty("openai.model.name");
+        Properties config = AppConfig.loadConfig();
+        String apiKey = config.getProperty(AppConfig.OPENAI_API_KEY);
+        String baseUrl = config.getProperty(AppConfig.OPENAI_API_BASE_URL);
+        String modelName = config.getProperty(AppConfig.OPENAI_MODEL_NAME);
 
-        if (apiKey == null || apiKey.equals("sk-your-api-key-here")) {
-            log.error("请先配置 API Key！");
+        if (!AppConfig.isApiKeyConfigured(apiKey)) {
+            log.error("请先在 src/main/resources/{} 中配置你的 OpenAI API Key！", AppConfig.CONFIG_FILE);
             return;
         }
 
@@ -148,14 +147,4 @@ public class TaskAssistantDemo {
         });
     }
 
-    private static Properties loadConfig() throws IOException {
-        Properties props = new Properties();
-        try (InputStream is = TaskAssistantDemo.class.getClassLoader()
-                .getResourceAsStream("application.properties")) {
-            if (is != null) {
-                props.load(is);
-            }
-        }
-        return props;
-    }
 }
