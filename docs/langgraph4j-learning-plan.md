@@ -75,13 +75,13 @@ graph.addConditionalEntryPoint(
 );
 ```
 
-### 6. 子图（Subgraphs）
+### 6. 子图（Subgraphs）✅
 - **核心方法：** `addNode(id, compiledGraph)`
 - **学习内容：**
   - 将复杂逻辑封装为独立子图
   - 子图与父图共享状态
   - 模块化设计
-- **Demo：** `SubgraphDemo.java`
+- **Demo：** `SubgraphDemo.java` ✅
 - **场景：** 订单处理包含多个子流程（验证、支付、发货）
 
 ```java
@@ -93,12 +93,12 @@ CompiledGraph<SubState> compiledSub = subGraph.compile();
 parentGraph.addNode("order_processing", compiledSub);
 ```
 
-### 7. 并行执行（Parallel Execution）
+### 7. 并行执行（Parallel Execution）✅
 - **学习内容：**
   - 多个节点同时执行
   - 等待所有并行节点完成
   - 并行结果合并
-- **Demo：** `ParallelExecutionDemo.java`
+- **Demo：** `ParallelExecutionDemo.java` ✅
 - **场景：** 同时查询多个知识库，合并结果
 
 ```java
