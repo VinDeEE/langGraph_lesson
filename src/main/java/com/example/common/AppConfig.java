@@ -12,7 +12,7 @@ import java.util.Properties;
 public class AppConfig {
 
     /** 配置文件路径 */
-    public static final String CONFIG_FILE = "application.properties";
+    public static final String CONFIG_FILE = "application_bak.properties";
 
     /** 配置项 key */
     public static final String OPENAI_API_KEY = "openai.api.key";

@@ -117,13 +117,13 @@ graph.addEdge(START, "query_db1")
      .addEdge("query_db3", "merge_results");
 ```
 
-### 8. 流式输出（Streaming）
+### 8. 流式输出（Streaming）✅
 - **核心方法：** `stream()` 返回 `AsyncGenerator`
 - **学习内容：**
   - 逐步观察状态变化
   - LLM 响应的实时输出
   - 流式处理与回调
-- **Demo：** `StreamingDemo.java`
+- **Demo：** `StreamingDemo.java` ✅
 - **场景：** 实时显示 AI 回复过程
 
 ```java
