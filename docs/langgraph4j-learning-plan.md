@@ -139,7 +139,7 @@ for (var output : compiledGraph.stream(inputs)) {
 
 ## 高级篇
 
-### 9. 检查点与持久化（Checkpoints）
+### 9. 检查点与持久化（Checkpoints）✅
 - **核心类：** `CheckpointSaver`、`MemorySaver`
 - **学习内容：**
   - 状态快照保存
@@ -149,7 +149,7 @@ for (var output : compiledGraph.stream(inputs)) {
   ```xml
   <artifactId>langgraph4j-core</artifactId>  <!-- MemorySaver 内置 -->
   ```
-- **Demo：** `CheckpointDemo.java`
+- **Demo：** `CheckpointDemo.java` ✅
 - **场景：** 长对话中断后恢复
 
 ```java
