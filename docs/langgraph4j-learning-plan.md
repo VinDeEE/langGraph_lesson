@@ -180,12 +180,12 @@ graph.invoke(checkpointId, newInputs);
   - 生产环境的状态持久化
 - **Demo：** `DatabasePersistenceDemo.java`
 
-### 11. 人工介入（Human-in-the-Loop）
+### 11. 人工介入（Human-in-the-Loop）✅
 - **学习内容：**
   - 暂停执行等待人工审批
   - 人工输入后继续执行
   - 审批节点设计
-- **Demo：** `HumanApprovalDemo.java`
+- **Demo：** `HumanApprovalDemo.java` ✅
 - **场景：** 敏感操作需要人工确认
 
 ```java
