@@ -2,6 +2,7 @@ package com.example.streaming;
 
 import com.example.common.AppConfig;
 import com.sun.net.httpserver.HttpServer;
+import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 

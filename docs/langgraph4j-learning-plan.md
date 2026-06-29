@@ -245,19 +245,19 @@ var agent = AgentExecutor.builder()
 var result = agent.invoke("今天北京天气怎么样？");
 ```
 
-### 14. 工具调用（Tool Calling）
+### 14. 工具调用（Tool Calling）✅
 - **学习内容：**
   - `@Tool` 注解定义工具
   - LLM 自动决定调用哪个工具
   - 工具结果返回给 LLM 继续推理
-- **Demo：** `ToolCallingDemo.java`
+- **Demo：** `ToolCallingDemo.java` ✅
 
-### 15. LangChain4j 集成
+### 15. LangChain4j 集成 ✅
 - **学习内容：**
   - 与 LangChain4j ChatModel 集成
   - 使用 LangChain4j 的工具生态
   - 消息历史管理
-- **Demo：** `LangChain4jIntegrationDemo.java`
+- **Demo：** `LangChain4jIntegrationDemo.java` ✅
 
 ### 16. Spring AI 集成
 - **学习内容：**
@@ -295,22 +295,29 @@ System.out.println(mermaid);
 
 ## 完整 Demo 清单
 
-| 序号 | Demo 名称 | 对应知识点 | 优先级 |
-|------|-----------|-----------|--------|
-| 1 | `CustomerServiceState.java` | 状态管理 | ✅ 已完成 |
-| 2 | `IntentRecognitionAgent.java` | 节点定义 | ✅ 已完成 |
-| 3 | `CustomerServiceDemo.java` | 固定流程图 | ✅ 已完成 |
-| 4 | `DynamicRoutingDemo.java` | 条件路由 | ✅ 已完成 |
-| 5 | `ConditionalEntryDemo.java` | 条件入口 | ⭐⭐⭐ |
-| 6 | `SubgraphDemo.java` | 子图 | ⭐⭐⭐ |
-| 7 | `ParallelExecutionDemo.java` | 并行执行 | ⭐⭐⭐ |
-| 8 | `StreamingDemo.java` | 流式输出 | ⭐⭐ |
-| 9 | `CheckpointDemo.java` | 检查点 | ⭐⭐⭐ |
-| 10 | `HumanApprovalDemo.java` | 人工介入 | ⭐⭐⭐ |
-| 11 | `ReActAgentDemo.java` | Agent 执行器 | ⭐⭐⭐⭐ |
-| 12 | `ToolCallingDemo.java` | 工具调用 | ⭐⭐⭐⭐ |
-| 13 | `MultiThreadDemo.java` | 多线程管理 | ⭐⭐ |
-| 14 | `VisualizationDemo.java` | 图可视化 | ⭐ |
+| 序号 | Demo 名称 | 对应知识点 | 完成状态 | 优先级 |
+|------|-----------|-----------|----------|--------|
+| 1 | `CustomerServiceState.java` | 状态管理 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 2 | `IntentRecognitionAgent.java` | 节点定义 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 3 | `CustomerServiceDemo.java` | 固定流程图 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 4 | `DynamicRoutingDemo.java` | 条件路由 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 5 | `SubgraphDemo.java` | 子图 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 6 | `ParallelExecutionDemo.java` | 并行执行 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 7 | `StreamingDemo.java` | 流式输出 | ✅ 已完成 | ⭐⭐⭐ |
+| 8 | `LLMStreamingDemo.java` | LLM 流式输出 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 9 | `WebStreamingDemo.java` | Web 流式输出 | ✅ 已完成 | ⭐⭐⭐ |
+| 10 | `CheckpointDemo.java` | 检查点 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 11 | `DurableExecutionDemo.java` | 持久化执行 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 12 | `HumanApprovalDemo.java` | 人工介入 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 13 | `MultiThreadDemo.java` | 多线程管理 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 14 | `GraphVisualizationDemo.java` | 图可视化 | ✅ 已完成 | ⭐⭐ |
+| 15 | `ReActAgentDemo.java` | Agent 执行器 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 16 | `ProductionAgentDemo.java` | 生产级 Agent | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
+| 17 | `ConditionalEntryDemo.java` | 条件入口 | ❌ 未完成 | ⭐⭐⭐ |
+| 18 | `ToolCallingDemo.java` | 工具调用 | ✅ 已完成 | ⭐⭐⭐⭐ |
+| 19 | `LangChain4jIntegrationDemo.java` | LangChain4j 集成 | ✅ 已完成 | ⭐⭐⭐ |
+| 20 | `SpringAiDemo.java` | Spring AI 集成 | ❌ 未完成 | ⭐⭐ |
+| 21 | `ObservabilityDemo.java` | 可观测性 | ❌ 未完成 | ⭐ |
 
 ---
 
