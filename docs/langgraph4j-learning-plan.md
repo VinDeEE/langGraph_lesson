@@ -205,19 +205,19 @@ graph.addEdge("auto_process", "human_approval")
      );
 ```
 
-### 12. 多线程/会话管理（Threads）
+### 12. 多线程/会话管理（Threads）✅
 - **学习内容：**
   - 独立的执行线程
   - 每个线程独立的检查点历史
   - 多用户并发处理
-- **Demo：** `MultiThreadDemo.java`
+- **Demo：** `MultiThreadDemo.java` ✅
 - **场景：** 多用户同时使用客服系统
 
 ---
 
 ## 实战篇
 
-### 13. Agent 执行器（ReACT Agent）
+### 13. Agent 执行器（ReACT Agent）✅
 - **核心类：** `AgentExecutor`
 - **学习内容：**
   - ReACT（Reasoning + Acting）模式
@@ -227,7 +227,7 @@ graph.addEdge("auto_process", "human_approval")
   ```xml
   <artifactId>langgraph4j-langchain4j</artifactId>
   ```
-- **Demo：** `ReActAgentDemo.java`
+- **Demo：** `ReActAgentDemo.java` ✅
 - **场景：** 自动查询天气、搜索信息、执行计算
 
 ```java
