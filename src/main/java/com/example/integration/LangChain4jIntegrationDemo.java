@@ -10,6 +10,8 @@ import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +47,7 @@ public class LangChain4jIntegrationDemo {
 
     // ========== 2. AI 服务接口（带记忆） ==========
     interface ChatAssistant {
-        String chat(@MemoryId String userId, String message);
+        String chat(@MemoryId String userId, @UserMessage String message);
     }
 
     // ========== 3. 多用户会话管理 ==========
@@ -174,16 +176,17 @@ public class LangChain4jIntegrationDemo {
     static void chatMemoryDemo(ChatLanguageModel model) {
         // 创建带记忆的助手
         interface MemoryAssistant {
-            String chat(@MemoryId String sessionId, String message);
+            String chat(@MemoryId String sessionId, @UserMessage String message);
         }
 
-        ChatMemory memory = MessageWindowChatMemory.builder()
-            .maxMessages(10)
-            .build();
-
+        // 使用 chatMemoryProvider 支持 @MemoryId
         MemoryAssistant assistant = AiServices.builder(MemoryAssistant.class)
             .chatLanguageModel(model)
-            .chatMemory(memory)
+            .chatMemoryProvider(memoryId ->
+                MessageWindowChatMemory.builder()
+                    .maxMessages(10)
+                    .build()
+            )
             .build();
 
         String sessionId = "test-session";

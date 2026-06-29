@@ -259,6 +259,102 @@ var result = agent.invoke("今天北京天气怎么样？");
   - 消息历史管理
 - **Demo：** `LangChain4jIntegrationDemo.java` ✅
 
+#### AiServices 接口方法定义规则
+
+**方法签名要求：**
+```java
+interface Assistant {
+    // 1. 最简单：只有一个参数（用户消息）
+    String chat(String userMessage);
+
+    // 2. 多参数：需要使用注解标记
+    String chat(@MemoryId String userId, @UserMessage String message);
+
+    // 3. 带模板变量：使用 @V 注解
+    @UserMessage("你好，我叫{{name}}，今年{{age}}岁")
+    String chat(@V("name") String name, @V("age") int age);
+}
+```
+
+**参数个数要求：**
+- 无限制，可以有任意多个参数
+- 但每个参数必须有明确的用途（通过注解指定）
+
+**可用注解详解：**
+
+| 注解 | 作用位置 | 说明 | 示例 |
+|------|---------|------|------|
+| `@UserMessage` | 方法/参数 | 定义用户消息模板或标记用户消息参数 | `@UserMessage("你好{{name}}")` |
+| `@SystemMessage` | 方法/类 | 定义系统提示词 | `@SystemMessage("你是助手")` |
+| `@MemoryId` | 参数 | 标记会话ID，用于多用户隔离 | `@MemoryId String userId` |
+| `@V` | 参数 | 定义模板变量名 | `@V("name") String name` |
+| `@Moderate` | 方法 | 启用内容审核 | `@Moderate` |
+| `@Tool` | 方法 | 定义工具（在工具类中） | `@Tool("获取天气")` |
+
+**@UserMessage 详解：**
+```java
+// 用法1：标记参数为用户消息
+String chat(@UserMessage String message);
+
+// 用法2：定义消息模板（方法级别）
+@UserMessage("帮我查{{city}}的天气")
+String chat(@V("city") String city);
+
+// 用法3：从资源文件读取模板
+@UserMessage(fromResource = "prompt-template.txt")
+String chat(@V("name") String name);
+```
+
+**@SystemMessage 详解：**
+```java
+// 用法1：定义系统提示词
+@SystemMessage("你是一个友好的助手")
+String chat(String message);
+
+// 用法2：带模板变量
+@SystemMessage("你是一个{{role}}助手")
+String chat(@UserMessage String message, @V("role") String role);
+
+// 用法3：多行提示词
+@SystemMessage({
+    "你是一个专业的客服。",
+    "请用友好的语气回答问题。",
+    "如果不确定，请说'我不知道'。"
+})
+String chat(String message);
+```
+
+**@MemoryId 详解：**
+```java
+// 用法：标记参数为会话标识
+String chat(@MemoryId String userId, @UserMessage String message);
+
+// 注意：
+// 1. 使用 @MemoryId 时，必须配置 chatMemoryProvider
+// 2. 参数类型可以是任意类型（需实现 equals/hashCode）
+// 3. 不同 memoryId 的会话完全隔离
+```
+
+**@V 详解：**
+```java
+// 用法：定义模板变量
+@UserMessage("你好，我叫{{name}}")
+String chat(@V("name") String name);
+
+// 注意：
+// 1. {{name}} 是模板占位符
+// 2. @V("name") 指定参数对应的变量名
+// 3. 如果编译时加了 -parameters 选项，可以省略 @V 的 value
+```
+
+**返回值类型：**
+| 类型 | 说明 |
+|------|------|
+| `String` | 返回文本响应 |
+| `AiMessage` | 返回完整的消息对象 |
+| `TokenStream` | 流式输出 |
+| `Future<String>` | 异步调用 |
+
 ### 16. Spring AI 集成
 - **学习内容：**
   - Spring Boot 应用集成
