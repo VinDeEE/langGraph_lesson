@@ -52,27 +52,31 @@
 
 ## 进阶篇
 
-### 5. 条件入口（Conditional Entry Point）
-- **核心方法：** `addConditionalEntryPoint()`
+### 5. 条件入口（Conditional Entry Point）✅
+- **核心方法：** `addConditionalEntryPoint()`（当前版本用路由节点实现）
 - **学习内容：**
   - 根据初始输入动态选择起始节点
   - 与条件边的区别
-- **Demo：** `ConditionalEntryDemo.java`
+- **Demo：** `ConditionalEntryDemo.java` ✅
 - **场景：** 不同类型的用户请求直接进入不同处理流程
 
 ```java
-// 示例代码
-graph.addConditionalEntryPoint(
-    edge_async(state -> {
-        String type = state.value("requestType").orElse("default");
-        return type;
-    }),
+// 实现方式：路由节点 + 条件边
+.addNode("router", node_async(state -> {
+    String input = state.userInput().orElse("");
+    String type = "general";
+    if (input.contains("投诉")) type = "complaint";
+    else if (input.contains("退货")) type = "return";
+    return Map.of("requestType", type);
+}))
+.addConditionalEdges("router",
+    edge_async(state -> state.requestType().orElse("general")),
     Map.of(
-        "urgent", "urgent_handler",
-        "normal", "normal_handler",
-        "default", "default_handler"
+        "complaint", "complaint_handler",
+        "return", "return_handler",
+        "general", "general_handler"
     )
-);
+)
 ```
 
 ### 6. 子图（Subgraphs）✅
@@ -409,7 +413,7 @@ System.out.println(mermaid);
 | 14 | `GraphVisualizationDemo.java` | 图可视化 | ✅ 已完成 | ⭐⭐ |
 | 15 | `ReActAgentDemo.java` | Agent 执行器 | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
 | 16 | `ProductionAgentDemo.java` | 生产级 Agent | ✅ 已完成 | ⭐⭐⭐⭐⭐ |
-| 17 | `ConditionalEntryDemo.java` | 条件入口 | ❌ 未完成 | ⭐⭐⭐ |
+| 17 | `ConditionalEntryDemo.java` | 条件入口 | ✅ 已完成 | ⭐⭐⭐ |
 | 18 | `ToolCallingDemo.java` | 工具调用 | ✅ 已完成 | ⭐⭐⭐⭐ |
 | 19 | `LangChain4jIntegrationDemo.java` | LangChain4j 集成 | ✅ 已完成 | ⭐⭐⭐ |
 | 20 | `SpringAiDemo.java` | Spring AI 集成 | ❌ 未完成 | ⭐⭐ |
