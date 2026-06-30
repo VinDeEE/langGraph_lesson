@@ -359,12 +359,12 @@ String chat(@V("name") String name);
 | `TokenStream` | 流式输出 |
 | `Future<String>` | 异步调用 |
 
-### 16. Spring AI 集成
+### 16. Spring AI 集成 ✅
 - **学习内容：**
   - Spring Boot 应用集成
   - Spring AI ChatModel 使用
   - 依赖注入方式
-- **Demo：** `SpringAiDemo.java`
+- **Demo：** `SpringAiDemo.java` ✅
 
 ### 17. 图可视化
 - **学习内容：**
@@ -598,7 +598,7 @@ graph.addWrapCallNodeHook((nodeId, state, config, action) -> {
 | 17 | `ConditionalEntryDemo.java` | 条件入口 | ✅ 已完成 | ⭐⭐⭐ |
 | 18 | `ToolCallingDemo.java` | 工具调用 | ✅ 已完成 | ⭐⭐⭐⭐ |
 | 19 | `LangChain4jIntegrationDemo.java` | LangChain4j 集成 | ✅ 已完成 | ⭐⭐⭐ |
-| 20 | `SpringAiDemo.java` | Spring AI 集成 | ❌ 未完成 | ⭐⭐ |
+| 20 | `SpringAiDemo.java` | Spring AI 集成 | ✅ 已完成 | ⭐⭐ |
 | 21 | `ObservabilityDemo.java` | 可观测性 | ✅ 已完成 | ⭐ |
 
 ---
