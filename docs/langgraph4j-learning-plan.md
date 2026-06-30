@@ -380,7 +380,7 @@ String mermaid = graph.toMermaid();
 System.out.println(mermaid);
 ```
 
-### 18. OpenTelemetry 可观测性
+### 18. OpenTelemetry 可观测性 ✅
 - **依赖：**
   ```xml
   <artifactId>langgraph4j-opentelemetry</artifactId>
@@ -389,7 +389,189 @@ System.out.println(mermaid);
   - 追踪节点执行
   - 性能监控
   - 错误追踪
-- **Demo：** `ObservabilityDemo.java`
+- **Demo：** `ObservabilityDemo.java` ✅
+
+#### Hook 详解（可观测性核心）
+
+**Hook 总览：**
+
+| 方法 | 作用位置 | 触发时机 | 用途 |
+|------|---------|---------|------|
+| `addBeforeCallNodeHook` | 节点 | 节点执行前 | 日志、计时、权限检查 |
+| `addAfterCallNodeHook` | 节点 | 节点执行后 | 日志、计时、结果处理 |
+| `addWrapCallNodeHook` | 节点 | 包装整个节点执行 | 事务、重试、熔断 |
+| `addBeforeCallEdgeHook` | 边 | 边执行前 | 路由日志 |
+| `addAfterCallEdgeHook` | 边 | 边执行后 | 路由结果处理 |
+| `addWrapCallEdgeHook` | 边 | 包装整个边执行 | 路由拦截 |
+
+**1. NodeHook.BeforeCall（节点前置钩子）：**
+```java
+// 接口定义
+interface BeforeCall<State> {
+    CompletableFuture<Map<String, Object>> applyBefore(
+        String nodeId,      // 节点名称
+        State state,        // 当前状态
+        RunnableConfig config  // 运行配置
+    );
+}
+
+// 用法：全局钩子（所有节点）
+graph.addBeforeCallNodeHook((nodeId, state, config) -> {
+    log.info("节点 {} 即将执行", nodeId);
+    return CompletableFuture.completedFuture(Map.of());  // 返回空Map不修改状态
+});
+
+// 用法：指定节点钩子
+graph.addBeforeCallNodeHook("step1", (nodeId, state, config) -> {
+    log.info("step1 即将执行");
+    return CompletableFuture.completedFuture(Map.of());
+});
+```
+
+**2. NodeHook.AfterCall（节点后置钩子）：**
+```java
+// 接口定义
+interface AfterCall<State> {
+    CompletableFuture<Map<String, Object>> applyAfter(
+        String nodeId,           // 节点名称
+        State state,             // 当前状态
+        RunnableConfig config,   // 运行配置
+        Map<String, Object> lastResult  // 节点执行结果
+    );
+}
+
+// 用法
+graph.addAfterCallNodeHook((nodeId, state, config, result) -> {
+    log.info("节点 {} 执行完成，结果: {}", nodeId, result);
+    return CompletableFuture.completedFuture(Map.of());
+});
+```
+
+**3. NodeHook.WrapCall（节点包装钩子）：**
+```java
+// 接口定义
+interface WrapCall<State> {
+    CompletableFuture<Map<String, Object>> applyWrap(
+        String nodeId,                          // 节点名称
+        State state,                            // 当前状态
+        RunnableConfig config,                  // 运行配置
+        AsyncNodeActionWithConfig<State> action // 原始节点动作
+    );
+}
+
+// 用法：实现重试逻辑
+graph.addWrapCallNodeHook((nodeId, state, config, action) -> {
+    // 可以在执行前做处理
+    log.info("包装节点 {}", nodeId);
+
+    // 调用原始动作
+    return action.apply(state, config).thenApply(result -> {
+        // 可以在执行后做处理
+        log.info("节点 {} 完成", nodeId);
+        return result;
+    });
+});
+
+// 用法：实现事务
+graph.addWrapCallNodeHook((nodeId, state, config, action) -> {
+   beginTransaction();
+    return action.apply(state, config).thenApply(result -> {
+        commitTransaction();
+        return result;
+    }).exceptionally(ex -> {
+        rollbackTransaction();
+        throw new RuntimeException(ex);
+    });
+});
+```
+
+**4. EdgeHook.BeforeCall（边前置钩子）：**
+```java
+// 接口定义
+interface BeforeCall<State> {
+    CompletableFuture<Command> applyBefore(
+        String sourceId,       // 源节点名称
+        State state,           // 当前状态
+        RunnableConfig config  // 运行配置
+    );
+}
+
+// 用法
+graph.addBeforeCallEdgeHook((sourceId, state, config) -> {
+    log.info("从 {} 出发的边即将执行", sourceId);
+    return CompletableFuture.completedFuture(null);  // 返回null不修改路由
+});
+```
+
+**5. EdgeHook.AfterCall（边后置钩子）：**
+```java
+// 接口定义
+interface AfterCall<State> {
+    CompletableFuture<Command> applyAfter(
+        String sourceId,       // 源节点名称
+        State state,           // 当前状态
+        RunnableConfig config, // 运行配置
+        Command lastResult     // 边执行结果（路由目标）
+    );
+}
+
+// 用法
+graph.addAfterCallEdgeHook((sourceId, state, config, result) -> {
+    log.info("从 {} 路由到 {}", sourceId, result.gotoNode());
+    return CompletableFuture.completedFuture(null);
+});
+```
+
+**6. EdgeHook.WrapCall（边包装钩子）：**
+```java
+// 接口定义
+interface WrapCall<State> {
+    CompletableFuture<Command> applyWrap(
+        String sourceId,                       // 源节点名称
+        State state,                           // 当前状态
+        RunnableConfig config,                 // 运行配置
+        AsyncCommandAction<State> action       // 原始边动作
+    );
+}
+
+// 用法：实现路由拦截
+graph.addWrapCallEdgeHook((sourceId, state, config, action) -> {
+    log.info("拦截从 {} 出发的路由", sourceId);
+
+    // 可以修改路由逻辑
+    return action.apply(state, config).thenApply(command -> {
+        // 可以修改路由目标
+        log.info("最终路由到: {}", command.gotoNode());
+        return command;
+    });
+});
+```
+
+**实际应用示例：**
+```java
+// 完整的可观测性实现
+graph.addBeforeCallNodeHook((nodeId, state, config) -> {
+    MDC.put("nodeId", nodeId);  // 日志上下文
+    tracer.startNode(nodeId);    // 开始计时
+    return CompletableFuture.completedFuture(Map.of());
+});
+
+graph.addAfterCallNodeHook((nodeId, state, config, result) -> {
+    tracer.endNode(nodeId, true, null);  // 结束计时
+    metrics.recordNodeExecution(nodeId); // 记录指标
+    MDC.remove("nodeId");                // 清理上下文
+    return CompletableFuture.completedFuture(Map.of());
+});
+
+graph.addWrapCallNodeHook((nodeId, state, config, action) -> {
+    try {
+        return action.apply(state, config);
+    } catch (Exception e) {
+        tracer.endNode(nodeId, false, e.getMessage());  // 记录错误
+        throw e;
+    }
+});
+```
 
 ---
 
@@ -417,7 +599,7 @@ System.out.println(mermaid);
 | 18 | `ToolCallingDemo.java` | 工具调用 | ✅ 已完成 | ⭐⭐⭐⭐ |
 | 19 | `LangChain4jIntegrationDemo.java` | LangChain4j 集成 | ✅ 已完成 | ⭐⭐⭐ |
 | 20 | `SpringAiDemo.java` | Spring AI 集成 | ❌ 未完成 | ⭐⭐ |
-| 21 | `ObservabilityDemo.java` | 可观测性 | ❌ 未完成 | ⭐ |
+| 21 | `ObservabilityDemo.java` | 可观测性 | ✅ 已完成 | ⭐ |
 
 ---
 
